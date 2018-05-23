@@ -13,9 +13,17 @@ module.exports = {
     devServer: {
       contentBase: './dist',
       port: 9000,
-      proxy: {
-        "/api": "http://localhost:8080"
+      proxy: [{
+          '/api': {
+              target: 'http://localhost:8080',
+          }
       },
+      {
+        '/api/tail': {
+            target: 'ws://localhost:8080',
+            ws: true
+        }
+    }],
       historyApiFallback: true
     },
 

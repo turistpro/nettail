@@ -1,14 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as qs from 'query-string';
-import { addLog } from './action';
+import { addLog, addFilter } from './action';
 
 
 
 class Tail extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
     componentDidMount() {
-        const tailWs = new WebSocket('ws://localhost:8080/api/tail/' + this.props.path);
+        const host = window.location.host;
+        // const host = "localhost:8080";
+        const tailWs = new WebSocket(`ws://${host}/api/tail/${this.props.path}`);
         tailWs.onmessage = message => {
             this.props.addLog(message.data);
         };
@@ -21,19 +27,37 @@ class Tail extends React.Component {
     }
 
     scrollToBottom() {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+        this.messagesEnd.scrollIntoView();
     }
 
     componentDidUpdate() {
         this.scrollToBottom();
     }
 
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        console.log(value);
+        this.props.addFilter(value);
+    }
+
     render() {
-        document.title = `(${this.props.logs.length}) netTail -f ${this.props.path}`;
+        const count = this.props.logs.length;
+        const filter = this.props.filter;
+        document.title = `(${count}) netTail -f ${this.props.path}`;
+
         return (
             <div>
-                <h1>netTail -f { this.props.path }</h1>
-                <div>
+                <div className="header sticky">
+                    <div className="headerInner">
+                        <h2>netTail -f { this.props.path } ({ count })</h2>
+                    </div>
+                    <div className="headerInner filter">
+                        <input type="text" name="filter" placeholder="search" onChange={this.handleInputChange}/>
+                    </div>
+                </div>
+                <div className="content">
                     <div className="MessageContainer" >
                         <div className="MessagesList">
                             { this.props.logs.map((line, index) => (
@@ -52,11 +76,13 @@ class Tail extends React.Component {
 
 const mapStateToProps = state => ({
     path: qs.parse(state.routing.location.search)['path'],
-    logs: state.app.logs
+    logs: state.app.logs.filter(line => line.includes(state.app.filter)),
+    filter: state.app.filter
 });
 
 const mapDispatchToProps = {
-    addLog
+    addLog,
+    addFilter
 }
 
 

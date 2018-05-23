@@ -13,13 +13,15 @@ import Tail from './Tail';
 
 import './style.css';
 
-const rootReducer = (state={ logs: [] }, action) => {
+const rootReducer = (state={ logs: [] , filter: ""}, action) => {
   const { type } = action;
   switch(type) {
     case 'ADD_LOG':
-      return {
+      return Object.assign({}, state, {
         logs: state.logs.concat(action.message)
-      };
+      });
+    case 'ADD_FILTER':
+      return Object.assign({}, state, {filter: action.filter}) 
     default:
       return state;
   }

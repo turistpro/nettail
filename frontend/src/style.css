@@ -2,4 +2,40 @@ body {
     font-family: monospace;
     background-color: black;
     color: green;
+    margin: 0;
 }
+
+.headerInner {
+    display: inline-block;
+}
+
+.filter {
+    float: right;
+    padding: 19px 40px;
+}
+
+.top-container {
+    background-color: #f1f1f1;
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .header {
+    padding: 10px 16px;
+    background: #555;
+    color: #f1f1f1;
+  }
+  
+  .content {
+    padding: 16px;
+  }
+  
+  .sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+  .sticky + .content {
+    padding-top: 102px;
+  }
