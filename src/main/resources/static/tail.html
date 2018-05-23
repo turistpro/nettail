@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="events"></div>
+<script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    console.log(window.location);
+    var path = getParameterByName("path");
+    var clientWebSocket = new WebSocket("ws://localhost:8080/api/tail/" + path);
+    clientWebSocket.onopen = function() {
+        console.log("clientWebSocket.onopen", clientWebSocket);
+        console.log("clientWebSocket.readyState", "websocketstatus");
+        clientWebSocket.send("event-me-from-browser");
+    }
+    clientWebSocket.onclose = function(error) {
+        console.log("clientWebSocket.onclose", clientWebSocket, error);
+        events("Closing connection");
+    }
+    clientWebSocket.onerror = function(error) {
+        console.log("clientWebSocket.onerror", clientWebSocket, error);
+        events("An error occured");
+    }
+    clientWebSocket.onmessage = function(error) {
+        console.log("clientWebSocket.onmessage", clientWebSocket, error);
+        events(error.data);
+    }
+    function events(responseEvent) {
+        document.querySelector(".events").innerHTML += responseEvent + "<br>";
+    }
+</script>
+</body>
+</html>
