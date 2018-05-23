@@ -38,20 +38,20 @@ class Tail extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        console.log(value);
         this.props.addFilter(value);
     }
 
     render() {
+        const overall = this.props.count;
         const count = this.props.logs.length;
         const filter = this.props.filter;
-        document.title = `(${count}) netTail -f ${this.props.path}`;
-
+        document.title = `(${overall}) netTail -f ${this.props.path}`;
+        const badge = (filter.length > 0) ? `(${count}:${overall})` : `(${overall})`;
         return (
             <div>
                 <div className="header sticky">
                     <div className="headerInner">
-                        <h2>netTail -f { this.props.path } ({ count })</h2>
+                        <h2>netTail -f { this.props.path } { badge }</h2>
                     </div>
                     <div className="headerInner filter">
                         <input type="text" name="filter" placeholder="search" onChange={this.handleInputChange}/>
@@ -77,6 +77,7 @@ class Tail extends React.Component {
 const mapStateToProps = state => ({
     path: qs.parse(state.routing.location.search)['path'],
     logs: state.app.logs.filter(line => line.includes(state.app.filter)),
+    count: state.app.logs.length,
     filter: state.app.filter
 });
 
