@@ -23,14 +23,16 @@ public class TailJsch implements Runnable {
     private InputStream m_in;
     private FluxSink<String> stringFluxSink;
     private Flux<String> flux;
+    private int readLineCount;
 
     private boolean stopFlag = false;
 
     private JSch jsch;
 
-    public TailJsch(JSch jsch, URI uri) {
+    public TailJsch(JSch jsch, URI uri, int readLineCount) {
         this.jsch = jsch;
         this.uri = uri;
+        this.readLineCount = readLineCount;
         this.flux = Flux.create(stringFluxSink -> {
             this.stringFluxSink = stringFluxSink;
         });
@@ -85,7 +87,7 @@ public class TailJsch implements Runnable {
 
             ChannelExec m_channelExec = (ChannelExec) session.openChannel("exec");
             m_channelExec.setPty(true);
-            String cmd = "tail -F -n 100 " + uri.getPath();
+            String cmd = "tail -F -n " + readLineCount + " " + uri.getPath();
             m_channelExec.setCommand(cmd);
             m_in = m_channelExec.getInputStream();
             m_channelExec.connect();

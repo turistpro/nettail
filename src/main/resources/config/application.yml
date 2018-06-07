@@ -1,0 +1,7 @@
+nettail:
+  bufferSize: 100
+  connectionTimeout: 60
+  ssh:
+    key:
+      location:
+      passphrase:
