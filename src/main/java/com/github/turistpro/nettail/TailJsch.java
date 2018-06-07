@@ -85,7 +85,7 @@ public class TailJsch implements Runnable {
 
             ChannelExec m_channelExec = (ChannelExec) session.openChannel("exec");
             m_channelExec.setPty(true);
-            String cmd = "tail -f " + uri.getPath();
+            String cmd = "tail -F -n 100 " + uri.getPath();
             m_channelExec.setCommand(cmd);
             m_in = m_channelExec.getInputStream();
             m_channelExec.connect();

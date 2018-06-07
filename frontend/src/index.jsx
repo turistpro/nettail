@@ -6,6 +6,7 @@ import { Route, Switch, Redirect } from 'react-router';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import { addLog } from './action';
 
 import App from './App';
@@ -28,14 +29,13 @@ const rootReducer = (state={ logs: [] , filter: ""}, action) => {
 };
 
 const history = createHistory()
-const middleware = routerMiddleware(history)
 
 const store = createStore(
   combineReducers({
     app: rootReducer,
     routing: routerReducer
   }),
-  composeWithDevTools(applyMiddleware(middleware))
+  composeWithDevTools(applyMiddleware(thunk, routerMiddleware(history)))
 );
 
 ReactDOM.render(
@@ -51,3 +51,23 @@ ReactDOM.render(
   document.getElementById('app')
 );
 
+/*const randomStr = (m) => {
+  m = m || 9;
+  let s = '';
+  const r = ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (let i=0; i < m; i++) {
+    s += r.charAt(Math.floor(Math.random()*r.length));
+  }
+	return s;
+};
+
+for (var i = 0; i < 100; i++) {
+  store.dispatch(addLog('message-' + i));
+}
+
+setInterval(() => store.dispatch(
+  addLog(
+    new Date() + " - " + randomStr(100) + randomStr(100)
+  )
+), 1000);
+*/

@@ -2,7 +2,9 @@
 .gradle
 /build/
 /out/
-frontend/node_modules/
+/frontend/node_modules/
+/frontend/dist/
+bundle.js
 npm-debug.log
 
 # Ignore Gradle GUI config

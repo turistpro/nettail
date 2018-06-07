@@ -1,3 +1,7 @@
+html, body, #app, div.container {
+  height: 100%;
+}
+
 body {
     font-family: monospace;
     background-color: black;
@@ -5,37 +9,33 @@ body {
     margin: 0;
 }
 
-.headerInner {
-    display: inline-block;
+.navbar {
+  background-color: #333;
+  display: flex;
+  position: fixed;
+  flex-direction: row;
+  top: 0;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.filter {
-    float: right;
-    padding: 19px 40px;
+.main {
+  top: 100px;
+  position: fixed;
+  height: 100%;
 }
 
-.top-container {
-    background-color: #f1f1f1;
-    padding: 30px;
-    text-align: center;
-  }
-  
-  .header {
+.navbar > .item {
     padding: 10px 16px;
-    background: #555;
+}
+
+h2, h3 { 
     color: #f1f1f1;
+    word-wrap: break-word;
   }
-  
-  .content {
-    padding: 16px;
-  }
-  
-  .sticky {
-    position: fixed;
-    top: 0;
-    width: 100%;
-  }
-  
-  .sticky + .content {
-    padding-top: 102px;
-  }
+
+
+input#search {
+  width: 200px;
+}
