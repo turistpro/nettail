@@ -42,7 +42,7 @@ const store = createStore(
 /*const randomStr = (m) => {
   m = m || 9;
   let s = '';
-  const r = ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const r = ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789АБВГДЕЖДИВАЙГЙЦХЁафвыауцйуцйисчсй';
 	for (let i=0; i < m; i++) {
     s += r.charAt(Math.floor(Math.random()*r.length));
   }

@@ -25,7 +25,7 @@ class TailVirtual extends React.Component {
     }
     componentDidMount() {
         const host = window.location.host;
-        //const host = "localhost:8080";
+        // const host = "localhost:8080";
         const tailWs = new WebSocket(`ws://${host}/api/tail/${this.props.path}`);
         tailWs.onmessage = message => {
             this.props.addLog(message.data);
