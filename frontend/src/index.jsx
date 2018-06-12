@@ -14,13 +14,13 @@ import Tail from './Tail';
 
 import './style.css';
 
-const rootReducer = (state={ logs: [] , filter: ""}, action) => {
+const rootReducer = (state={ logs: [] , filter: "", count: 0 }, action) => {
   const { type } = action;
   switch(type) {
     case 'ADD_LOG':
-      return Object.assign({}, state, {
-        logs: state.logs.concat(action.message)
-      });
+      const { logs, count } = state;
+      logs.push(action.message);
+      return Object.assign({}, state, {count: count + 1});
     case 'ADD_FILTER':
       return Object.assign({}, state, {filter: action.filter}) 
     default:
@@ -38,18 +38,6 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(thunk, routerMiddleware(history)))
 );
 
-ReactDOM.render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <Switch>
-        <Route exact={ true } path="/" component={ App } />
-        <Route exact={ true } path="/tail" component={ Tail } />
-        <Redirect to="/" />
-      </Switch>
-    </ConnectedRouter>
-  </Provider>,
-  document.getElementById('app')
-);
 
 /*const randomStr = (m) => {
   m = m || 9;
@@ -69,5 +57,17 @@ setInterval(() => store.dispatch(
   addLog(
     new Date() + " - " + randomStr(100) + randomStr(100)
   )
-), 1000);
-*/
+), 1000);*/
+
+ReactDOM.render(
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <Switch>
+        <Route exact={ true } path="/" component={ App } />
+        <Route exact={ true } path="/tail" component={ Tail } />
+        <Redirect to="/" />
+      </Switch>
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('app')
+);

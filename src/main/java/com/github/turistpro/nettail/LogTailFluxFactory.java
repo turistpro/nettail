@@ -1,7 +1,7 @@
 package com.github.turistpro.nettail;
 
-import com.jcraft.jsch.JSch;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.sshd.client.SshClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,16 +23,21 @@ public class LogTailFluxFactory {
     @Value("${nettail.connectionTimeout:0}")
     private long connectionTimeout;
 
-    @Autowired
-    private JSch jSch;
     private final Map<String, Flux<String>> fluxMap = Collections.synchronizedMap(new HashMap());
+
+    @Autowired
+    private SshClient sshClient;
+
+    private Flux<String> newInstance(URI uri) {
+        return new SshTailFlux(sshClient, uri, bufferSize).getFlux();
+    }
 
     public Flux<String> getInstance(URI uri) {
         synchronized (fluxMap) {
             Flux<String> connectableFlux;
             connectableFlux = fluxMap.get(uri.toString());
             if (connectableFlux == null) {
-                Flux<String> flux = new TailJsch(jSch, uri, bufferSize).getFlux();
+                Flux<String> flux = newInstance(uri);
                 connectableFlux = flux
                         .doFinally(signalType -> {
                             synchronized (fluxMap) {
@@ -46,6 +51,7 @@ public class LogTailFluxFactory {
                             log.info("final({})", signalType);
                         })
                         .doOnSubscribe(subscription -> log.info("subcribe=({})", uri.toString()))
+
                 ;
                 fluxMap.put(uri.toString(), connectableFlux);
                 log.info("add({})", uri.toString());
@@ -53,4 +59,5 @@ public class LogTailFluxFactory {
             return connectableFlux;
         }
     }
+
 }

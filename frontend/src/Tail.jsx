@@ -134,7 +134,7 @@ const mapStateToProps = state => {
         path: query.path,
         searchText: searchText,
         logs: filtered,
-        count: state.app.logs.length,
+        count: state.app.count,
     }
 };
 

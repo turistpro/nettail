@@ -22,8 +22,16 @@ public class LogTailWebSocketHanlder implements WebSocketHandler{
     public Mono<Void> handle(WebSocketSession session) {
         try {
             URI uri = new URI(session.getHandshakeInfo().getUri().getPath().substring(10));
-            Flux<String> flux = logTailFluxFactory.getInstance(uri);
-            session.receive().map(WebSocketMessage::getPayloadAsText).subscribe();
+
+            Flux<String> flux = logTailFluxFactory.getInstance(uri)
+                .doOnSubscribe(subscription -> log.info("subscribe"))
+                    ;
+            session.receive().map(WebSocketMessage::getPayloadAsText).subscribe(
+                    null,
+                    (throwable) -> log.error("error", throwable),
+                    () -> log.info("complete={}, {}", session.getId(), session.getClass())
+            );
+            log.info("ok");
             return session.send(flux.map(session::textMessage));
         } catch (URISyntaxException e) {
             session.send(Mono.just(e.toString()).map(session::textMessage));

@@ -1,8 +1,7 @@
 package com.github.turistpro.nettail;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.sshd.client.SshClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +11,11 @@ import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 
+import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Configuration
@@ -23,24 +25,12 @@ public class NetTailConfig {
     @Autowired
     private WebSocketHandler logWebSocketHandler;
 
-    @Value("${nettail.ssh.key.location}")
-    private String sshKeyLocation;
-
-    @Value("${nettail.ssh.key.passphrase}")
-    private String sshKeyPassphrase;
-
     @Bean
-    public JSch setupJSch() {
-        JSch jSch = new JSch();
-        if( sshKeyLocation != null ) {
-            try {
-                jSch.addIdentity(sshKeyLocation, sshKeyPassphrase);
-            } catch (JSchException e) {
-                log.error(e.getCause().getMessage());
-            }
-        }
+    public SshClient sshClient() {
+        SshClient client = SshClient.setUpDefaultClient();
+        client.start();
 
-        return jSch;
+        return client;
     }
 
     @Bean
@@ -56,6 +46,11 @@ public class NetTailConfig {
     @Bean
     public WebSocketHandlerAdapter handlerAdapter() {
         return new WebSocketHandlerAdapter();
+    }
+
+    @Bean
+    public ExecutorService executorService() {
+        return Executors.newFixedThreadPool(10);
     }
 
 }

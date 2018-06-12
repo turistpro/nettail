@@ -4,13 +4,17 @@ html, body, #app, div.container {
 
 body {
     font-family: monospace;
-    background-color: black;
-    color: green;
+    background-color: #1D1F21;
+    color: #B5BD68;
     margin: 0;
 }
 
+.error {
+  color: #A54242;
+}
+
 .navbar {
-  background-color: #333;
+  background-color: #373B41;
   display: flex;
   position: fixed;
   flex-direction: row;
@@ -31,11 +35,24 @@ body {
 }
 
 h2, h3 { 
-    color: #f1f1f1;
+    color: #C5C8C6;
     word-wrap: break-word;
   }
 
 
 input#search {
   width: 200px;
+}
+
+#search {
+  font-family: monospace;
+  background-color: #C5C8C6;
+  border: none;
+  padding: 3px;
+  border-radius: 1.5px;
+  color: #1D1F21;
+}
+
+#search:focus{
+  outline: none;
 }

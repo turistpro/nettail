@@ -11,4 +11,5 @@ public class NetTailApplication {
     public static void main(String... args) {
         SpringApplication.run(NetTailApplication.class, args);
     }
+
 }
