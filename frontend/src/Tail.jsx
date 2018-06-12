@@ -49,7 +49,6 @@ class TailVirtual extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        cache.clearAll();
         this.props.changeSearchText(value);
     }
     renderRow({
@@ -69,20 +68,18 @@ class TailVirtual extends React.Component {
                 rowIndex={index}
             >
                 <div key={key} style={style} >
-                    <Log id={index} message={this.props.logs[index]} />
+                    <Log id={this.props.filtered[index]} message={this.props.logs[this.props.filtered[index]]} />
                 </div>
             </CellMeasurer>
         )
     }
     render() {
         const overall = this.props.count;
-        const logs = this.props.logs;
+        const logs = this.props.filtered;
         const count = logs.length;
         const searchText = this.props.searchText;
         document.title = `(${overall}) netTail -f ${this.props.path}`;
         const badge = (searchText !== undefined && searchText.length > 0) ? `(${count}:${overall})` : `(${overall})`;
-        cache.clear(count, 0);
-        
         return (
 
             <AutoSizer
@@ -128,12 +125,25 @@ const mapStateToProps = state => {
     try {
         reg = RegExp(searchText);
     } catch (e) {}
-    const logs = state.app.logs;
-    const filtered = reg === undefined ? logs.filter(line => line.includes(searchText)) : logs.filter(line => line.search(reg) >= 0)
+    const logs = state.app.logs || [];
+    let filtered = [];
+    let b = false;
+    logs.forEach((line, index) => {
+        if (reg === undefined ) {
+            b = line.includes(searchText);
+         } else {
+            b = line.search(reg) >= 0
+         }
+         if (b) {
+             filtered.push(index);
+         }
+    });
+    
     return {
         path: query.path,
         searchText: searchText,
-        logs: filtered,
+        filtered: filtered,
+        logs: logs,
         count: state.app.count,
     }
 };
