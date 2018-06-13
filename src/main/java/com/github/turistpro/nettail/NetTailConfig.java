@@ -25,7 +25,6 @@ public class NetTailConfig {
     public SshClient sshClient() {
         SshClient client = SshClient.setUpDefaultClient();
         client.start();
-
         return client;
     }
 

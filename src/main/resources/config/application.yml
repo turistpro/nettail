@@ -1,4 +1,4 @@
 # log4j.logger.org.apache.mina: INFO
 nettail:
   bufferSize: 100
-  connectionTimeout: 60
+  connectionTimeout: 5
