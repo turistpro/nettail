@@ -14,12 +14,13 @@ import Tail from './Tail';
 
 import './style.css';
 
-const rootReducer = (state={ logs: [] , filter: "", count: 0 }, action) => {
+const rootReducer = (state={ logs: [], logKeys: [], filter: "", count: 0 }, action) => {
   const { type } = action;
   switch(type) {
     case 'ADD_LOG':
-      const { logs, count } = state;
+      const { logs, logKeys, count } = state;
       logs.push(action.message);
+      logKeys.push(count);
       return Object.assign({}, state, {count: count + 1});
     case 'ADD_FILTER':
       return Object.assign({}, state, {filter: action.filter}) 

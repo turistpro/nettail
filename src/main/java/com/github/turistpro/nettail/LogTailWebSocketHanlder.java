@@ -21,7 +21,11 @@ public class LogTailWebSocketHanlder implements WebSocketHandler{
     @Override
     public Mono<Void> handle(WebSocketSession session) {
         try {
-            URI uri = new URI(session.getHandshakeInfo().getUri().getPath().substring(10));
+            String url = session.getHandshakeInfo().getUri().getPath().substring(10);
+            if (!url.startsWith("ssh://") && url.startsWith("ssh:/")) {
+                url = "ssh://" + url.substring(5);
+            }
+            URI uri = new URI(url);
 
             Flux<String> flux = logTailFluxFactory.getInstance(uri)
                 .doOnSubscribe(subscription -> log.info("subscribe"))

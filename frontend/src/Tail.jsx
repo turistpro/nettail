@@ -121,24 +121,18 @@ class TailVirtual extends React.Component {
 const mapStateToProps = state => {
     const query = qs.parse(state.routing.location.search);
     const searchText = query.searchText || '';
+    
     let reg = undefined;
     try {
         reg = RegExp(searchText);
     } catch (e) {}
+
     const logs = state.app.logs || [];
-    let filtered = [];
-    let b = false;
-    logs.forEach((line, index) => {
-        if (reg === undefined ) {
-            b = line.includes(searchText);
-         } else {
-            b = line.search(reg) >= 0
-         }
-         if (b) {
-             filtered.push(index);
-         }
+    const filtered = (state.app.logKeys || []).filter(item => {
+        const line = logs[item];
+        return searchText === '' || (reg !== undefined && line.search(reg) >= 0) || line.includes(searchText);
     });
-    
+
     return {
         path: query.path,
         searchText: searchText,

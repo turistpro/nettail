@@ -54,6 +54,7 @@ html, body, #app, div.container {
 
 body {
     font-family: 'Ubuntu Mono', monospace;
+    font-size: 15px;
     background-color: #1D1F21;
     color: #B5BD68;
     margin: 0;
@@ -84,7 +85,8 @@ body {
     padding: 10px 16px;
 }
 
-h2, h3 { 
+h3 { 
+    font-size: 17px;
     color: #C5C8C6;
     word-wrap: break-word;
   }

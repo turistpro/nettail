@@ -1,4 +1,4 @@
-let ExtractTextPlugin = require ('extract-text-webpack-plugin');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
 module.exports = {
@@ -11,20 +11,16 @@ module.exports = {
         filename: 'bundle.js'
     },
     devServer: {
-      contentBase: './dist',
-      port: 9000,
-      proxy: [{
-          '/api': {
-              target: 'http://localhost:8080',
-          }
-      },
-      {
-        '/api/tail': {
-            target: 'ws://localhost:8080',
-            ws: true
-        }
-    }],
-      historyApiFallback: true
+        contentBase: './dist',
+        port: 9000,
+        proxy: {
+            '/api/tail': {
+                target: 'ws://localhost:8080',
+                ws: true,
+                changeOrigin: false
+            }
+        },
+        historyApiFallback: true
     },
 
     module: {
